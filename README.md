@@ -4,6 +4,11 @@ This Python [application](https://huggingface.co/spaces/LeonceNsh/energy) allows
 
 This tool provides an intuitive way for business users and analysts to quickly visualize key technical indicators without needing deep expertise in coding or data processing, making stock analysis more accessible and engaging.
 
+
+**Exhibit 1. Hess Corporation -- Simple Moving Average**
+
+![image](https://github.com/user-attachments/assets/d07415f3-59c2-4915-b59a-9b8b08ea7339)
+
 ## Customize this Application with your own Stock List
 
 ### Clone this Repository
