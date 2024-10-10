@@ -37,9 +37,13 @@ You can modify the `COMPANY_TICKERS` dictionary in the Python file to add or rem
 
 ```python
 COMPANY_TICKERS = {
-    'Apple Inc.': 'AAPL',
-    'Microsoft Corporation': 'MSFT',
-    'Tesla, Inc.': 'TSLA',
+    'Constellation Energy Corp': 'CEG',
+    'Chevron Corporation': 'CVX',
+    'Total Energies': 'TTE',
+    'Exxon Mobil': 'XOM',
+    'BP': 'BP',
+    'Royal Dutch Shell': 'SHEL',
+    'ConocoPhillips': 'COP',
     # Add more companies here...
 }
 ```
