@@ -37,28 +37,6 @@ pip install -r requirements.txt
 python src/app.py
 ```
 
-energy/
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-├── src/
-│   ├── __init__.py
-│   └── app.py
-├── tests/
-│   ├── __init__.py
-│   ├── conftest.py
-│   ├── test_fetch_historical_data.py
-│   ├── test_plot_to_image.py
-│   ├── test_plot_indicator.py
-│   ├── test_plot_indicators.py
-│   ├── test_select_all_indicators.py
-│   └── test_gradio_app.py
-├── requirements.txt
-├── requirements-dev.txt
-├── setup.py
-└── README.md
-
-
 ### Customize the Ticker List
 You can modify the `COMPANY_TICKERS` dictionary in the Python file to add or remove companies based on your needs.
 
