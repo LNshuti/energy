@@ -1,0 +1,11 @@
+name: energy
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip 
+  - pip:
+    - gradio
+    - numpy
+    - pandas
