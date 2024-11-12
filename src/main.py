@@ -77,15 +77,12 @@ def fetch_historical_data(ticker, start_date, end_date):
     try:
         data = yf.download(ticker, start=start_date, end=end_date)
         if data.empty:
-            raise ValueError(f"No data found for ticker {ticker}")
-        info = yf.Ticker(ticker).info
-        market_cap = info.get('marketCap', 'N/A')
-        if market_cap != 'N/A':
-            market_cap = market_cap / 1e9  # Convert to billions
+            return None, 'N/A'
+        market_cap = yf.Ticker(ticker).info['marketCap']
         return data, market_cap
     except Exception as e:
         print(f"Error fetching data for {ticker}: {e}")
-        return None, 'N/A'
+        return None, None
 
 def fetch_and_plot(company_names, indicator_types):
     images, error_message, total_market_cap = plot_indicators(company_names, indicator_types)
