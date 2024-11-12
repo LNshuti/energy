@@ -100,12 +100,12 @@ def test_plot_indicators_multiple_indicators_multiple_companies(mock_yf_download
 def test_plot_indicators_with_no_data(mock_yf_download, mock_yf_info, sample_data):
     from unittest.mock import MagicMock
     mock_yf_download.return_value = MagicMock(empty=True)
-    
+
     company_names = ['Enterprise Products Partners']
     indicator_types = ['SMA']
-    
+
     images, error_message, total_market_cap = plot_indicators(company_names, indicator_types)
-    
+
     assert len(images) == 0
-    assert error_message == ""
-    assert total_market_cap == 0
+    assert error_message == "No data available"
+    assert total_market_cap is None

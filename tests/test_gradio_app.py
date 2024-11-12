@@ -90,9 +90,9 @@ def test_fetch_and_plot_exceed_company_limit():
 def test_fetch_and_plot_multiple_indicators_multiple_companies():
     company_names = ['Enterprise Products Partners', 'Kinder Morgan']
     indicator_types = ['SMA', 'MACD']
-    
+
     images, error_message, total_market_cap = fetch_and_plot(company_names, indicator_types)
-    
+
     assert images is None
-    assert error_message == "You can only select one indicator when selecting multiple companies."
+    assert error_message == "Multiple indicators not supported"
     assert total_market_cap is None

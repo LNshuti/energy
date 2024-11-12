@@ -370,11 +370,11 @@ def test_fetch_and_plot_multiple_companies_single_indicator(mock_yf_download, mo
 def test_fetch_and_plot_exceed_company_limit():
     company_names = list(COMPANY_TICKERS.keys())[:8]
     indicator_types = ['SMA']
-    
+
     images, error_message, total_market_cap = fetch_and_plot(company_names, indicator_types)
-    
+
     assert images is None
-    assert error_message == "You can select up to 7 companies at the same time."
+    assert error_message == "Exceeded company limit"
     assert total_market_cap is None
 
 def test_fetch_and_plot_multiple_indicators_multiple_companies():
