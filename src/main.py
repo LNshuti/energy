@@ -87,6 +87,12 @@ def fetch_historical_data(ticker, start_date, end_date):
         print(f"Error fetching data for {ticker}: {e}")
         return None, 'N/A'
 
+def fetch_and_plot(company_names, indicator_types):
+    images, error_message, total_market_cap = plot_indicators(company_names, indicator_types)
+    if error_message:
+        return [None] * len(indicator_types), error_message, None
+    return images, "", f"Total Market Cap: ${total_market_cap:.2f} Billion" if total_market_cap else "N/A"
+    
 def plot_to_image(plt, title, market_cap):
     """Convert plot to a PIL Image object."""
     plt.title(title, fontsize=FONT_SIZE + 1, pad=40)
