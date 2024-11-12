@@ -1,3 +1,9 @@
 pandas 
 yfinance
 cachetools
+matplotlib
+numpy
+Pillow
+gradio
+
+
