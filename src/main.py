@@ -162,9 +162,35 @@ def plot_indicators(company_names, indicator_types):
     return images, "", total_market_cap
 
 def fetch_and_plot(company_names, indicator_types):
-    # Implementation of fetch_and_plot function
-    pass
-
+    """
+    Fetch data and plot indicators for given companies
+    """
+    if len(company_names) > 7:
+        return None, "Exceeded company limit", None
+        
+    if len(indicator_types) > 1:
+        return None, "Multiple indicators not supported", None
+        
+    images = []
+    total_market_cap = 0.0
+    
+    try:
+        for company in company_names:
+            ticker = COMPANY_TICKERS[company]
+            data, market_cap = fetch_historical_data(ticker, START_DATE, END_DATE)
+            if data is not None and market_cap is not None:
+                image = plot_indicator(data, company, ticker, indicator_types[0], market_cap)
+                images.append(image)
+                total_market_cap += market_cap / 1e9
+                
+        if not images:
+            return None, "No data available", None
+            
+        return images, None, total_market_cap
+        
+    except Exception as e:
+        return None, str(e), None
+    
 def select_all_indicators(select_all):
     """Select or deselect all indicators based on the select_all flag."""
     indicators = ["SMA", "MACD", "RSI", "Bollinger Bands"]
