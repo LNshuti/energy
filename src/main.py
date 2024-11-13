@@ -18,14 +18,10 @@ COMPANY_TICKERS = {
     'Enterprise Products Partners': 'EPD',
     'Kinder Morgan': 'KMI',
     'MPLX LP': 'MPLX',
-    'Google': 'GOOGL',
     'Constellation Energy Corp': 'CEG',
-    'Equitrans Midstream': 'ETRN',
     'Targa Resources': 'TRGP',
-    'Western Midstream Partners': 'WES',
     'Williams Cos': 'WMB',
     'Chevron Corporation': 'CVX',
-    'Loves': 'privately held',
     'Total Energies': 'TTE',
     'Exxon Mobil': 'XOM',
     'BP': 'BP',
@@ -34,38 +30,21 @@ COMPANY_TICKERS = {
     'Phillips 66': 'PSX',
     'Marathon Petroleum': 'MPC',
     'Cheniere Energy': 'LNG',
-    'Devon Energy': 'DVN',
     'EOG Resources': 'EOG',
-    'Pioneer Natural Resources': 'PXD',
     'Occidental Petroleum': 'OXY',
     'Hess Corporation': 'HES',
-    'Antero Resources': 'AR',
-    'Cabot Oil & Gas': 'COG',
     'Diamondback Energy': 'FANG',
-    'Apache Corporation': 'APA',
-    'Murphy Oil': 'MUR',
-    'Noble Energy': 'NBL',
-    'Range Resources': 'RRC',
-    'Continental Resources': 'CLR',
-    'Whiting Petroleum': 'WLL',
-    'Parsley Energy': 'PE',
     'Cimarex Energy': 'XEC',
-    'Marathon Oil': 'MRO',
-    'National Oilwell Varco': 'NOV',
     'Schlumberger': 'SLB',
     'Halliburton': 'HAL',
     'Baker Hughes': 'BKR',
-    'TechnipFMC': 'FTI',
     'Valero Energy': 'VLO',
-    'HollyFrontier': 'HFC',
-    'Tesoro Corporation': 'TSO',
     'Suncor Energy': 'SU',
     'Canadian Natural Resources': 'CNQ',
     'Imperial Oil': 'IMO',
     'Enbridge': 'ENB',
     'TC Energy': 'TRP',
-    'Pembina Pipeline': 'PBA',
-    'Keyera Corp': 'KEYUF'
+    'Pembina Pipeline': 'PBA'
 }
 
 # Cache with 1-day TTL
@@ -77,19 +56,16 @@ def fetch_historical_data(ticker, start_date, end_date):
     try:
         data = yf.download(ticker, start=start_date, end=end_date)
         if data.empty:
-            return None, 'N/A'
-        market_cap = yf.Ticker(ticker).info['marketCap']
+            raise ValueError(f"No data found for ticker {ticker}")
+        info = yf.Ticker(ticker).info
+        market_cap = info.get('marketCap', 'N/A')
+        if market_cap != 'N/A':
+            market_cap = market_cap / 1e9  # Convert to billions
         return data, market_cap
     except Exception as e:
         print(f"Error fetching data for {ticker}: {e}")
-        return None, None
+        return None, 'N/A'
 
-def fetch_and_plot(company_names, indicator_types):
-    images, error_message, total_market_cap = plot_indicators(company_names, indicator_types)
-    if error_message:
-        return [None] * len(indicator_types), error_message, None
-    return images, "", f"Total Market Cap: ${total_market_cap:.2f} Billion" if total_market_cap else "N/A"
-    
 def plot_to_image(plt, title, market_cap):
     """Convert plot to a PIL Image object."""
     plt.title(title, fontsize=FONT_SIZE + 1, pad=40)
