@@ -57,6 +57,7 @@ def fetch_historical_data(ticker, start_date, end_date):
         data = yf.download(ticker, start=start_date, end=end_date)
         if data.empty:
             raise ValueError(f"No data found for ticker {ticker}")
+            return None, None
         info = yf.Ticker(ticker).info
         market_cap = info.get('marketCap', 'N/A')
         if market_cap != 'N/A':
