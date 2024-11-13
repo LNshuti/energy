@@ -1,6 +1,10 @@
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 import pytest
 from src.main import fetch_and_plot, select_all_indicators
 from unittest.mock import patch
+from main import fetch_and_plot, select_all_indicators
 
 COMPANY_TICKERS = {
     'Energy Transfer LP': 'ET',
