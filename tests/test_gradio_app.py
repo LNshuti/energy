@@ -51,14 +51,19 @@ def test_fetch_and_plot_single_company_single_indicator(mock_yf_download, mock_y
 @patch('src.main.yf.Ticker')
 @patch('src.main.yf.download')
 def test_fetch_and_plot_multiple_companies_single_indicator(mock_yf_download, mock_yf_info, sample_data):
+    # Setup mocks
     mock_yf_download.return_value = sample_data
-    mock_yf_info.return_value.info = {'marketCap': 150000000000}
+    mock_ticker = MagicMock()
+    mock_ticker.info = {'marketCap': 150000000000}
+    mock_yf_info.return_value = mock_ticker
     
     company_names = ['Enterprise Products Partners', 'Kinder Morgan']
     indicator_types = ['MACD']
     
+    # Call function
     images, error_message, total_market_cap = fetch_and_plot(company_names, indicator_types)
     
+    # Verify results
     assert isinstance(images, list)
     assert len(images) == 2
     assert error_message is None
