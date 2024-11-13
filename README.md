@@ -34,7 +34,7 @@ pip install -r requirements.txt
 
 ### Run the **app.py** to Launch the Gradio Application
 ```bash 
-python src/app.py
+python src/main.py
 ```
 
 ### Customize the Ticker List
