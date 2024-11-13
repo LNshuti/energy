@@ -9,6 +9,12 @@ import gradio as gr
 from cachetools import cached, TTLCache
 import cProfile
 import pstats
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
+START_DATE = '2020-01-01'
+END_DATE =  datetime.today().strftime('%Y-%m-%d')
 
 # Global fontsize variable
 FONT_SIZE = 32
@@ -176,20 +182,24 @@ def fetch_and_plot(company_names, indicator_types):
     
     try:
         for company in company_names:
-            ticker = COMPANY_TICKERS[company]
+            ticker = COMPANY_TICKERS.get(company)
+            if not ticker:
+                continue
+                
             data, market_cap = fetch_historical_data(ticker, START_DATE, END_DATE)
             if data is not None and market_cap is not None:
                 image = plot_indicator(data, company, ticker, indicator_types[0], market_cap)
-                images.append(image)
-                total_market_cap += market_cap / 1e9
+                if image:
+                    images.append(image)
+                    total_market_cap += market_cap / 1e9
                 
         if not images:
-            return None, "No data available", None
+            return [], "No data available", None
             
         return images, None, total_market_cap
         
     except Exception as e:
-        return None, str(e), None
+        return [], str(e), None
     
 def select_all_indicators(select_all):
     """Select or deselect all indicators based on the select_all flag."""
