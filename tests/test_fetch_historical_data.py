@@ -19,7 +19,7 @@ def test_fetch_historical_data_exception(mock_yf_download, mock_yf_Ticker):
     data, market_cap = fetch_historical_data(ticker, start_date, end_date)
     
     assert data is None
-    assert market_cap is None  
+    assert market_cap == 'N/A' 
 
 @patch('src.main.yf.Ticker')
 @patch('src.main.yf.download')
