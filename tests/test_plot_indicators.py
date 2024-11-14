@@ -106,16 +106,10 @@ from unittest.mock import MagicMock, patch
 import pytest
 from src.main import plot_indicators  # Adjust the import path as necessary
 
-@patch('src.main.yf.Ticker')
-@patch('src.main.yf.download')
-def test_plot_indicators_with_no_data(mock_yf_download, mock_yf_info):
-    # Create empty DataFrame to simulate no data
-    mock_yf_download.return_value = pd.DataFrame()
-    
-    # Create a separate MagicMock for yf.Ticker().info
-    mock_ticker = MagicMock()
-    mock_ticker.info = {'marketCap': None}  # Simulate no market cap
-    mock_yf_info.return_value = mock_ticker
+@patch('src.main.fetch_historical_data')
+def test_plot_indicators_with_no_data(mock_fetch_historical_data):
+    # Mock fetch_historical_data to return (None, 'N/A') simulating no data available
+    mock_fetch_historical_data.return_value = (None, 'N/A')
     
     company_names = ['Enterprise Products Partners']
     indicator_types = ['SMA']
