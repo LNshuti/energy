@@ -1,5 +1,7 @@
 import pytest
 from src.main import plot_indicators
+import pandas as pd
+from unittest.mock import patch
 
 COMPANY_TICKERS = {
     'Energy Transfer LP': 'ET',
@@ -97,15 +99,25 @@ def test_plot_indicators_multiple_indicators_multiple_companies(mock_yf_download
     assert error_message == "You can only select one indicator when selecting multiple companies."
     assert total_market_cap is None
 
-def test_plot_indicators_with_no_data(mock_yf_download, mock_yf_info, sample_data):
-    from unittest.mock import MagicMock
-    mock_yf_download.return_value = MagicMock(empty=True)
+# tests/test_plot_indicators.py
+
+@patch('src.main.yf.Ticker')
+@patch('src.main.yf.download')
+def test_plot_indicators_with_no_data(mock_yf_download, mock_yf_info):
+    # Create empty DataFrame instead of MagicMock
+    mock_yf_download.return_value = pd.DataFrame()
+    
+    # Mock Ticker info
+    mock_ticker = mock_yf_download.return_value 
+    mock_ticker.info = {'marketCap': None}  # Simulate no market cap
+    mock_yf_info.return_value = mock_ticker
 
     company_names = ['Enterprise Products Partners']
     indicator_types = ['SMA']
 
     images, error_message, total_market_cap = plot_indicators(company_names, indicator_types)
 
-    assert len(images) == 0
-    assert error_message == "No data available"
-    assert total_market_cap is None
+    assert isinstance(images, list), "Expected images to be a list"
+    assert len(images) == 0, "Expected no images for empty data"
+    assert error_message == "No data available", f"Expected 'No data available', got {error_message}"
+    assert total_market_cap is None, "Expected total_market_cap to be None"

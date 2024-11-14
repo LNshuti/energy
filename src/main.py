@@ -138,35 +138,56 @@ def plot_indicator(data, company_name, ticker, indicator, market_cap):
         plt.ylabel('Price', fontsize=FONT_SIZE)
 
     return plot_to_image(plt, f'{company_name} ({ticker}) {indicator}', market_cap)
-
 def plot_indicators(company_names, indicator_types):
     """Plot the selected indicators for the selected companies."""
     images = []
-    total_market_cap = 0
+    total_market_cap = 0.0
+    
+    # Validate input parameters
     if len(company_names) > 7:
         return None, "You can select up to 7 companies at the same time.", None
     if len(company_names) > 1 and len(indicator_types) > 1:
         return None, "You can only select one indicator when selecting multiple companies.", None
 
-    with ThreadPoolExecutor() as executor:
-        future_to_company = {
-            executor.submit(fetch_historical_data, COMPANY_TICKERS[company], '2000-01-01', datetime.now().strftime('%Y-%m-%d')): (company, indicator)
-            for company in company_names
-            for indicator in indicator_types
-        }
+    try:
+        with ThreadPoolExecutor() as executor:
+            # Create futures for each company-indicator combination
+            future_to_company = {
+                executor.submit(
+                    fetch_historical_data, 
+                    COMPANY_TICKERS[company], 
+                    START_DATE, 
+                    END_DATE
+                ): (company, indicator)
+                for company in company_names
+                for indicator in indicator_types
+            }
 
-        for future in as_completed(future_to_company):
-            company, indicator = future_to_company[future]
-            ticker = COMPANY_TICKERS[company]
-            data, market_cap = future.result()
-            if data is None:
-                continue
-            images.append(plot_indicator(data, company, ticker, indicator, market_cap))
-            if market_cap != 'N/A':
-                total_market_cap += market_cap
+            # Process completed futures
+            for future in as_completed(future_to_company):
+                company, indicator = future_to_company[future]
+                ticker = COMPANY_TICKERS[company]
+                data, market_cap = future.result()
+                
+                # Skip if no data or empty data
+                if data is None or data.empty:
+                    continue
+                    
+                # Generate and store plot
+                image = plot_indicator(data, company, ticker, indicator, market_cap)
+                if image:
+                    images.append(image)
+                    if market_cap not in (None, 'N/A'):
+                        total_market_cap += market_cap
 
-    return images, "", total_market_cap
+        # Return appropriate response based on results
+        if not images:
+            return [], "No data available", None
+        return images, None, total_market_cap
 
+    except Exception as e:
+        return [], str(e), None
+    
 def fetch_and_plot(company_names, indicator_types):
     """
     Fetch data and plot indicators for given companies
