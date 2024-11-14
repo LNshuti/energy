@@ -187,12 +187,14 @@ def fetch_and_plot(company_names, indicator_types):
                 continue
                 
             data, market_cap = fetch_historical_data(ticker, START_DATE, END_DATE)
-            if data is not None and market_cap is not None:
+            if data is not None and market_cap != 'N/A':
                 image = plot_indicator(data, company, ticker, indicator_types[0], market_cap)
                 if image:
                     images.append(image)
-                    total_market_cap += market_cap / 1e9
-                
+                    total_market_cap += market_cap  # Remove the division here
+            else:
+                continue  # Handle cases where data or market_cap is not available
+                    
         if not images:
             return [], "No data available", None
             
