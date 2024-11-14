@@ -138,8 +138,10 @@ def plot_indicator(data, company_name, ticker, indicator, market_cap):
         plt.ylabel('Price', fontsize=FONT_SIZE)
 
     return plot_to_image(plt, f'{company_name} ({ticker}) {indicator}', market_cap)
+
 def plot_indicators(company_names, indicator_types):
     """Plot the selected indicators for the selected companies."""
+    import pandas as pd
     images = []
     total_market_cap = 0.0
     
@@ -169,8 +171,9 @@ def plot_indicators(company_names, indicator_types):
                 ticker = COMPANY_TICKERS[company]
                 data, market_cap = future.result()
                 
-                # Skip if no data or empty data
-                if data is None or data.empty:
+                # Skip if no data or empty DataFrame
+                if data is None or (isinstance(data, pd.DataFrame) and data.empty):
+                    logging.debug(f"No data available for {ticker}. Skipping.")
                     continue
                     
                 # Generate and store plot
@@ -183,7 +186,7 @@ def plot_indicators(company_names, indicator_types):
         # Return appropriate response based on results
         if not images:
             return [], "No data available", None
-        return images, None, total_market_cap
+        return images, "", total_market_cap
 
     except Exception as e:
         return [], str(e), None
