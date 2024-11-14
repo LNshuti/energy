@@ -52,6 +52,5 @@ COMPANY_TICKERS = {
     # Add more companies here...
 }
 ```
-
 ![image](https://github.com/user-attachments/assets/dbb609f8-d745-41e0-8d75-c0b372acd14f)
 
