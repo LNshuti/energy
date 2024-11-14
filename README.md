@@ -37,6 +37,11 @@ pip install -r requirements.txt
 python src/main.py
 ```
 
+**If you found the app useful, please make sure to give us a star!**
+
+![image](https://github.com/user-attachments/assets/0cf41a00-0abb-4223-a8f0-fd3b10bea6d5)
+
+
 ### Customize the Ticker List
 You can modify the `COMPANY_TICKERS` dictionary in the Python file to add or remove companies based on your needs.
 
