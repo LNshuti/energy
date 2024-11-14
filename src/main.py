@@ -85,15 +85,29 @@ def plot_to_image(plt, title, market_cap):
     plt.yticks(fontsize=FONT_SIZE)
     plt.tight_layout(rect=[0, 0, 1, 0.88])
 
-    buf = io.BytesIO()
-    plt.savefig(buf, format='png', dpi=200)
-    plt.close()
-    buf.seek(0)
-    return Image.open(buf)
+    # Save plot to a PIL Image
+    try:
+        from io import BytesIO
+        import PIL.Image
+
+        buf = BytesIO()
+        plt.savefig(buf, format='png')
+        buf.seek(0)
+        image = PIL.Image.open(buf)
+        plt.close()
+        return image
+    except Exception as e:
+        plt.close()
+        return None
 
 def plot_indicator(data, company_name, ticker, indicator, market_cap):
     """Plot selected technical indicator for a single company."""
-    plt.figure(figsize=(16, 10))
+    import pandas as pd
+    if data is None or (isinstance(data, pd.DataFrame) and data.empty):
+        logging.debug(f"No data to plot for {company_name} ({ticker}).")
+        return None
+    
+    plt.figure(figsize=(10, 6))
     if indicator == "SMA":
         sma_55 = data['Close'].rolling(window=55).mean()
         sma_200 = data['Close'].rolling(window=200).mean()

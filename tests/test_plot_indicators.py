@@ -101,23 +101,28 @@ def test_plot_indicators_multiple_indicators_multiple_companies(mock_yf_download
 
 # tests/test_plot_indicators.py
 
+import pandas as pd
+from unittest.mock import MagicMock, patch
+import pytest
+from src.main import plot_indicators  # Adjust the import path as necessary
+
 @patch('src.main.yf.Ticker')
 @patch('src.main.yf.download')
 def test_plot_indicators_with_no_data(mock_yf_download, mock_yf_info):
-    # Create empty DataFrame instead of MagicMock
+    # Create empty DataFrame to simulate no data
     mock_yf_download.return_value = pd.DataFrame()
     
-    # Mock Ticker info
-    mock_ticker = mock_yf_download.return_value 
+    # Create a separate MagicMock for yf.Ticker().info
+    mock_ticker = MagicMock()
     mock_ticker.info = {'marketCap': None}  # Simulate no market cap
     mock_yf_info.return_value = mock_ticker
-
+    
     company_names = ['Enterprise Products Partners']
     indicator_types = ['SMA']
-
+    
     images, error_message, total_market_cap = plot_indicators(company_names, indicator_types)
-
+    
     assert isinstance(images, list), "Expected images to be a list"
     assert len(images) == 0, "Expected no images for empty data"
-    assert error_message == "No data available", f"Expected 'No data available', got {error_message}"
+    assert error_message == "No data available", f"Expected 'No data available', got '{error_message}'"
     assert total_market_cap is None, "Expected total_market_cap to be None"
